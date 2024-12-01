@@ -70,7 +70,15 @@ function insider_options_page_html(): void
     if ( ! current_user_can( 'manage_options' ) ) {
         return;
     }
-    echo "<div>Hello, Insider!</div>";
+    echo '
+        <div>
+            <div>Hello, Insider!</div>
+            <div id="qrcode"></div>
+            <script type="text/javascript">
+                new QRCode(document.getElementById("qrcode"), "https://agxmeister.services/");
+            </script>
+        </div>
+    ';
 }
 
 function insider_options_page(): void
@@ -85,5 +93,14 @@ function insider_options_page(): void
     );
 }
 
+function insider_render_js(): void
+{
+    wp_enqueue_script(
+        'qrcode-min',
+        plugins_url("qrcode.min.js", __FILE__),
+    );
+}
+
 add_action('admin_menu', 'insider_options_page');
 add_action('rest_api_init', 'prefix_register_example_routes');
+add_action('admin_enqueue_scripts', 'insider_render_js');
